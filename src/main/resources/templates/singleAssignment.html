@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+  integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+
+<head>
+  <title>ALKEMY UNIVERSITY</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+
+<div sec:authorize="hasRole('ROLE_USER')">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" th:href="@{/}">ESTUDIANTE</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a th:href="@{/user/assignments}">Lista de Materias</a></li>
+          <li class="active"><a th:href="@{/user/studentAssignments}">Materias inscriptas</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+          <li><a><span class="glyphicon glyphicon-user"></span> [[${#httpServletRequest.remoteUser}]]</a></li>
+          <li><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+
+<div class="container-fluid" align="center">
+  <div class="card" style="width: 30rem;">
+    <div class="card-body">
+      <h2 class="card-title">
+        <th:block th:utext="${assignment.name}"/>
+      </h2>
+      <h4 class="card-text">
+        <th:block th:utext="'Turno: ' + ${assignment.schedule}"/>
+      </h4>
+      <h4 class="card-text">
+        <th:block th:utext="'Profesor: ' + ${assignment.teacher}"/>
+      </h4>
+      <h4 class="card-text">
+        <th:block th:utext="'Cupo Disponible :' + ${assignment.maxStudents}"/>
+      </h4>
+    
+     <hr>
+
+      <span th:if="${assignment.maxStudents} > 0">
+      <form th:action="'/user/assignments/' + ${assignment.id}" method="POST">
+      <button type="submit" th:disabled="${disabled}" class="btn btn-primary">Inscribirse</button>
+      </form>
+      </span>
+
+      <span th:unless="${assignment.maxStudents} > 0">
+        <a action="submit" class="btn btn-primary" disabled>Inscribirse</a>
+     
+        <hr>
+ 
+        <div class="alert alert-danger">
+            Cupos Agotados
+        </div>
+      </span>
+
+
+    <p class="label"> </p>
+ 
+    <div th:if="${display}" class="alert alert-success">
+        Ya estas inscripto en esta asignatura
+    </div>
+
+    <div th:unless="${display}">
+    <div th:if="${schedule}" class="alert alert-danger">
+        Ya estas inscripto en una materia en este turno
+  </div>
+  
+    </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+
+</html>
+

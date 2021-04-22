@@ -1,0 +1,232 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+  integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+
+<head>
+  <title>ALKEMY UNIVERSITY</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+  <div sec:authorize="hasRole('ROLE_ADMIN')">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" th:href="@{/}">ADMIN</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li class="active"><a th:href="@{/admin/assignments}">Materias</a></li>
+          <li><a th:href="@{/admin/teachers}">Profesores</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a><span class="glyphicon glyphicon-user"></span> [[${#httpServletRequest.remoteUser}]]</a></li>
+          <li><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <h4 id="add2" class="btn btn-default">Agregar Materia</h4>
+
+      <table id="add" class="table table-hover" style="display: none">
+        <thead class="thead-dark">
+
+          <tr>
+            <form action="/admin/assignments" method="POST">
+              <th><label for="fname">Name</label></th>
+              <th><label for="fschedule">Turno</label></th>
+              <th><label for="fmax">Cupo Disponible</label></th>
+              <th><label for="fteacher">Profesor</label></th>
+          </tr>
+          <tr>
+            <td><input class="form-control" type="text" id="fname" name="name" required=true></td>
+            <td><input class="form-control" type="text" id="fschedule" name="schedule" required=true></td>
+            <td><input class="form-control" type="number" id="fmax" name="maxStudents" required=true></td>
+
+
+            <td>
+              <select class="form-control" id="fteacher" name="teacher" required=true>
+                <div th:each="Teacher : ${teacherList}">
+                  <span th:if="${Teacher.active} == ${true}">
+                    <option th:value="${Teacher.lastName}" th:text="${Teacher.lastName}"></option>
+                  </span>
+                </div>
+              </select>
+            </td>
+
+          </tr>
+          <tr>
+            <td><input type="submit" value="Agregar Materia" class="btn btn-primary"></td>
+          </tr>
+          </form>
+    </div>
+  </div>
+
+  <div sec:authorize="hasRole('ROLE_USER')">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" th:href="@{/}">ESTUDIANTE</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li class="active"><a th:href="@{/user/assignments}">Lista de Materias</a></li>
+          <li><a th:href="@{/user/studentAssignments}">Materias inscriptas</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+          <li><a><span class="glyphicon glyphicon-user"></span> [[${#httpServletRequest.remoteUser}]]</a></li>
+          <li><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <div class="container-fluid">
+    <table class="table table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th>ID</th>
+          <th>NOMBRE</th>
+          <th>TURNO</th>
+          <th>CUPO DISPONIBLE</th>
+          <th>PROFESOR</th>
+          <th sec:authorize="hasRole('ROLE_ADMIN')">EDITAR</th>
+          <th sec:authorize="hasRole('ROLE_ADMIN')">ELIMINAR</th>
+        </tr>
+      </thead>
+  </div>
+
+  <div th:each="Assignment : ${assignemntList}">
+
+    <span th:if="${Assignment.id} == ${id}">
+      <tr >
+        <td><input class="form-control" type="number" id="fid2" name="id" th:value="${Assignment.id}" readonly></td>
+        <td><input class="form-control" type="text" id="fname2" name="name" th:value="${Assignment.name}"></td>
+
+        <td>
+          <select class="form-control" id="fschdule2" name="schedule" required>
+            <option value="Mañana" text="Mañana" th:selected="${Assignment.schedule == 'Mañana'}">Mañana</option>
+            <option value="Tarde" text="Tarde" th:selected="${Assignment.schedule == 'Tarde'}">Tarde</option>
+            <option value="Noche" text="Noche" th:selected="${Assignment.schedule == 'Noche'}">Noche</option>
+          </select>
+        </td>
+
+
+        <td><input class="form-control" type="text" id="fmaxStudents2" name="maxStudents"
+            th:value="${Assignment.maxStudents}"></td>
+        <input type="text" id="fteacher" name="fteacher" th:value="${Assignment.teacher}" hidden>
+        <td>
+          <select class="form-control" id="fteacher3" name="teacher" required>
+            <div th:each="Teacher : ${teacherList}">
+              <span th:if="${Teacher.active} == ${true}">
+                <option th:value="${Teacher.lastName}" th:text="${Teacher.lastName}"
+                  th:selected="${Teacher.lastName == Assignment.teacher}"></option>
+              </span>
+            </div>
+          </select>
+        </td>
+
+        <td sec:authorize="hasRole('ROLE_ADMIN')"> <input type="submit" class="btn btn-success" value="Confirm"
+            th:attr="onclick=|makePUTrequest(fid2.value , fname2.value, fschdule2.value, fmaxStudents2.value , fteacher3.value )|">
+        </td>
+        <td sec:authorize="hasRole('ROLE_ADMIN')"><input type="submit" class="btn btn-danger" value="Delete"
+            th:onclick="|makeDELETErequest(${Assignment.id})|"></td>
+
+      </tr>
+
+    </span>
+
+    <span th:unless="${Assignment.id} == ${id}">
+      <tr sec:authorize="hasRole('ROLE_USER')" role="button" th:data-href="@{/user/assignments/} + ${Assignment.id}">
+      
+        <td th:text="${Assignment.id}" </td>
+          <td th:text="${Assignment.name}" </td>
+          <td th:text="${Assignment.schedule}"></td>
+          <td th:text="${Assignment.maxStudents}"></td>
+          <td th:text="${Assignment.teacher}"></td>
+      </tr>
+      
+      
+      
+      
+        <tr sec:authorize="hasRole('ROLE_ADMIN')" role="button" >
+        <td th:text="${Assignment.id}" </td>
+        <td th:text="${Assignment.name}" </td>
+        <td th:text="${Assignment.schedule}"></td>
+        <td th:text="${Assignment.maxStudents}"></td>
+        <td th:text="${Assignment.teacher}"></td>
+  
+
+  
+
+  <td>
+    <form action="/admin/editAssignment" method="POST" sec:authorize="hasRole('ROLE_ADMIN')">
+      <input type="text" id="fid" name="id" th:value="${Assignment.id}" hidden>
+      <input type="text" id="fname" name="name" th:value="${Assignment.name}" hidden>
+      <input type="text" id="flastname" name="schedule" th:value="${Assignment.schedule}" hidden>
+      <input type="text" id="fposition" name="maxStudents" th:value="${Assignment.maxStudents}" hidden>
+      <input type="text" id="fage" name="teacher" th:value="${Assignment.teacher}" hidden>
+      <input type="submit" class="btn btn-success" value="Edit">
+    </form>
+  </td>
+  <td sec:authorize="hasRole('ROLE_ADMIN')"><input type="submit" class="btn btn-danger" value="Delete"
+      th:onclick="|makeDELETErequest(${Assignment.id})|"></td>
+
+  </tr>
+</span>
+  </div>
+  </div>
+  </div>
+
+  <script>
+
+    function makePUTrequest(id, name, schedule, maxStudents, teacher) {
+
+      $.ajax({
+        url: 'http://localhost:8080/admin/assignments/' + id,
+        type: 'PUT',
+        data: {
+          name: name,
+          schedule: schedule,
+          maxStudents: maxStudents,
+          teacher: teacher
+
+        },
+
+        success: function (result) {
+          window.location.href = ("/admin/assignments");
+        }
+      });
+    }
+
+    function makeDELETErequest(id) {
+
+      $.ajax({
+        url: 'http://localhost:8080/admin/assignments/' + id,
+        type: 'DELETE',
+        success: function (result) {
+          window.location.href = ("/admin/assignments");
+        }
+      });
+    }
+
+    $('#add2').click(function (e) {
+      e.preventDefault();
+      $("#add").delay(100).fadeIn(100)
+      $("#add2").fadeOut((100));
+
+    });
+
+    $(document).ready(function(){
+    $('*[data-href]').click(function(){
+        window.location = $(this).attr('data-href');
+        return false;
+    });
+});
+
+  </script>
+
+</body>
+
+</html>
