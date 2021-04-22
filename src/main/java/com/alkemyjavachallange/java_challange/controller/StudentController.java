@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class UserController {
+public class StudentController {
 
     @Autowired
     private AssignmentRepository assignmentRepository;
@@ -65,30 +65,20 @@ public class UserController {
     }
 
     
-
     @PostMapping("/user/assignments/{id}") 
     public ModelAndView addStudentAssignment(@PathVariable int id) { 
-        
-     ModelAndView modelAndView = new ModelAndView("singleAssignment"); 
-     StudentsAssignments studentsAssignments = new StudentsAssignments(); 
-     Assignment assignment = assignmentRepository.findById(id).get();
-      studentsAssignments.setAssignmentName(assignment.getName());
-      studentsAssignments.setSchedule(assignment.getSchedule());
-      studentsAssignments.setStudentDni(SecurityContextHolder.getContext().
-      getAuthentication().getName());
-      studentsAssignments.setId(assignment.getId());
-      studentsAssignments.setTeacher(assignment.getTeacher());
-      assignment.setMaxStudents(assignment.getMaxStudents() - 1);
-      studentsAssignmentsRepository.save(studentsAssignments);
-      modelAndView.addObject("assignment", assignment);
-      modelAndView.addObject("disabled", true);
-      modelAndView.addObject("display", true);
-      modelAndView.addObject("assignmentList",
-      assignmentRepository.findAllByOrderByName());
-      modelAndView.addObject("teacherList",
-      teacherRepository.findAllByOrderByName()); 
-      return modelAndView;
-      
+        ModelAndView modelAndView = new ModelAndView("singleAssignment"); 
+        Assignment assignment = assignmentRepository.findById(id).get();
+        StudentsAssignments studentsAssignments = new StudentsAssignments(assignment.getId(), SecurityContextHolder.getContext().
+        getAuthentication().getName(), assignment.getName(), assignment.getSchedule(), assignment.getTeacher()); 
+        assignment.setMaxStudents(assignment.getMaxStudents() - 1);
+        studentsAssignmentsRepository.save(studentsAssignments);
+        modelAndView.addObject("assignment", assignment);
+        modelAndView.addObject("disabled", true);
+        modelAndView.addObject("display", true);
+        modelAndView.addObject("assignmentList", assignmentRepository.findAllByOrderByName());
+        modelAndView.addObject("teacherList", teacherRepository.findAllByOrderByName()); 
+        return modelAndView;
       }
 
     @DeleteMapping("/user/studentAssignments/{id}")

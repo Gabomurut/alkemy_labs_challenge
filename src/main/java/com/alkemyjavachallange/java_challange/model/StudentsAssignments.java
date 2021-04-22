@@ -6,6 +6,7 @@ import javax.persistence.Id;
 @Entity
 public class StudentsAssignments {
 
+
     @Id
     private int id;
     
@@ -14,7 +15,12 @@ public class StudentsAssignments {
     private String assignmentName;
     private String schedule;
     private String teacher;
+
+    public StudentsAssignments(){
+        
+    }
     
+  
     public int getId() {
         return id;
     }
@@ -58,6 +64,14 @@ public class StudentsAssignments {
         return "StudentsAssignments [assignmentName=" + assignmentName + ", id=" + id + ", schedule=" + schedule
                 + ", studentAssignmentId=" + studentAssignmentId + ", studentDni=" + studentDni + ", teacher=" + teacher
                 + "]";
+    }
+
+    public StudentsAssignments(int id, String studentDni, String assignmentName, String schedule, String teacher) {
+        this.id = id;
+        this.studentDni = studentDni;
+        this.assignmentName = assignmentName;
+        this.schedule = schedule;
+        this.teacher = teacher;
     }
     
     
