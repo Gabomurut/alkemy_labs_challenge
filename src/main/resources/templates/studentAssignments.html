@@ -12,7 +12,7 @@
 <body>
 
 
-<div sec:authorize="hasRole('ROLE_USER')">
+  <div sec:authorize="hasRole('ROLE_USER')">
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -42,24 +42,24 @@
           <th>ELIMINAR</th>
         </tr>
       </thead>
-       <div th:each="Assignment : ${studentsAssignmentsList}">
+      <div th:each="Assignment : ${studentsAssignmentsList}">
         <div th:if="${Assignment.studentDni == #httpServletRequest.remoteUser} ">
-        <tr>
-        <td th:text="${Assignment.id}"</td>
-        <td th:text="${Assignment.assignmentName}"</td>
-        <td th:text="${Assignment.schedule}" </td>
-          <td th:text="${Assignment.teacher}"</td>
-        <td sec:authorize="hasRole('ROLE_USER')"><input type="submit" class="btn btn-danger" value="Borrar"
-            th:onclick="|makeDELETErequest(${Assignment.id})|"></td>
-        </tr>
-    </div>
-    </div>
+          <tr>
+            <td th:text="${Assignment.id}" </td>
+            <td th:text="${Assignment.assignmentName}" </td>
+            <td th:text="${Assignment.schedule}" </td>
+            <td th:text="${Assignment.teacher}" </td>
+            <td sec:authorize="hasRole('ROLE_USER')"><input type="submit" class="btn btn-danger" value="Borrar"
+                th:onclick="|makeDELETErequest(${Assignment.id})|"></td>
+          </tr>
+        </div>
+      </div>
     </table>
-    </div>
+  </div>
 
-    <script>
+  <script>
 
-function makeDELETErequest(id) {
+    function makeDELETErequest(id) {
 
       $.ajax({
         url: 'http://localhost:8080/user/studentAssignments/' + id,
@@ -72,7 +72,7 @@ function makeDELETErequest(id) {
 
 
 
-</script>
+  </script>
 
 
 </body>

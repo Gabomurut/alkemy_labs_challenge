@@ -14,6 +14,5 @@ public interface StudentsAssignmentsRepository extends CrudRepository<StudentsAs
     boolean existsByStudentAssignmentIdAndStudentDni(int id, String userName);
 
     boolean existsByScheduleAndStudentDni(String schedule, String userName);
-    
-}
 
+}

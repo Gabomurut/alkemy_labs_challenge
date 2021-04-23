@@ -6,8 +6,8 @@ import com.alkemyjavachallange.java_challange.model.Assignment;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface AssignmentRepository extends CrudRepository<Assignment, Integer>{
+public interface AssignmentRepository extends CrudRepository<Assignment, Integer> {
 
     List<Assignment> findAllByOrderByName();
-    
+
 }

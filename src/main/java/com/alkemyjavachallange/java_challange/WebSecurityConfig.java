@@ -17,29 +17,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-         auth.jdbcAuthentication().passwordEncoder(new BCryptPasswordEncoder())
-            .dataSource(dataSource)
-            .usersByUsernameQuery("select user_name, password, enabled from user where user_name=?")
-            .authoritiesByUsernameQuery("select user_name, role from user where user_name=?")
-        ;
-        
+        auth.jdbcAuthentication().passwordEncoder(new BCryptPasswordEncoder()).dataSource(dataSource)
+                .usersByUsernameQuery("select user_name, password, enabled from user where user_name=?")
+                .authoritiesByUsernameQuery("select user_name, role from user where user_name=?");
+
     }
- 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.authorizeRequests()
-            .antMatchers("/admin/*").hasRole("ADMIN")
-            .antMatchers("/user/*").hasRole("USER")
-            .antMatchers("/css/login.css").permitAll()
-            .antMatchers("/images/alkemylogo.png").permitAll()
-            .anyRequest().authenticated()
-            .and()
-            .formLogin().permitAll().loginPage("/login")
-            .and()
-            .logout().permitAll();
-        
-        http.csrf().disable() ;
-                 
+        http.authorizeRequests().antMatchers("/admin/*").hasRole("ADMIN").antMatchers("/user/*").hasRole("USER")
+                .antMatchers("/css/login.css").permitAll().antMatchers("/images/alkemylogo.png").permitAll()
+                .anyRequest().authenticated().and().formLogin().permitAll().loginPage("/login").and().logout()
+                .permitAll();
+
+        http.csrf().disable();
+
     }
 }

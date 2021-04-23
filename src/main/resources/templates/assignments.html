@@ -101,7 +101,7 @@
   <div th:each="Assignment : ${assignemntList}">
 
     <span th:if="${Assignment.id} == ${id}">
-      <tr >
+      <tr>
         <td><input class="form-control" type="number" id="fid2" name="id" th:value="${Assignment.id}" readonly></td>
         <td><input class="form-control" type="text" id="fname2" name="name" th:value="${Assignment.name}"></td>
 
@@ -140,42 +140,42 @@
 
     <span th:unless="${Assignment.id} == ${id}">
       <tr sec:authorize="hasRole('ROLE_USER')" role="button" th:data-href="@{/user/assignments/} + ${Assignment.id}">
-      
-        <td th:text="${Assignment.id}" </td>
-          <td th:text="${Assignment.name}" </td>
-          <td th:text="${Assignment.schedule}"></td>
-          <td th:text="${Assignment.maxStudents}"></td>
-          <td th:text="${Assignment.teacher}"></td>
-      </tr>
-      
-      
-      
-      
-        <tr sec:authorize="hasRole('ROLE_ADMIN')" role="button" >
+
         <td th:text="${Assignment.id}" </td>
         <td th:text="${Assignment.name}" </td>
         <td th:text="${Assignment.schedule}"></td>
         <td th:text="${Assignment.maxStudents}"></td>
         <td th:text="${Assignment.teacher}"></td>
-  
+      </tr>
 
-  
 
-  <td>
-    <form action="/admin/editAssignment" method="POST" sec:authorize="hasRole('ROLE_ADMIN')">
-      <input type="text" id="fid" name="id" th:value="${Assignment.id}" hidden>
-      <input type="text" id="fname" name="name" th:value="${Assignment.name}" hidden>
-      <input type="text" id="flastname" name="schedule" th:value="${Assignment.schedule}" hidden>
-      <input type="text" id="fposition" name="maxStudents" th:value="${Assignment.maxStudents}" hidden>
-      <input type="text" id="fage" name="teacher" th:value="${Assignment.teacher}" hidden>
-      <input type="submit" class="btn btn-success" value="Edit">
-    </form>
-  </td>
-  <td sec:authorize="hasRole('ROLE_ADMIN')"><input type="submit" class="btn btn-danger" value="Delete"
-      th:onclick="|makeDELETErequest(${Assignment.id})|"></td>
 
-  </tr>
-</span>
+
+      <tr sec:authorize="hasRole('ROLE_ADMIN')" role="button">
+        <td th:text="${Assignment.id}" </td>
+        <td th:text="${Assignment.name}" </td>
+        <td th:text="${Assignment.schedule}"></td>
+        <td th:text="${Assignment.maxStudents}"></td>
+        <td th:text="${Assignment.teacher}"></td>
+
+
+
+
+        <td>
+          <form action="/admin/editAssignment" method="POST" sec:authorize="hasRole('ROLE_ADMIN')">
+            <input type="text" id="fid" name="id" th:value="${Assignment.id}" hidden>
+            <input type="text" id="fname" name="name" th:value="${Assignment.name}" hidden>
+            <input type="text" id="flastname" name="schedule" th:value="${Assignment.schedule}" hidden>
+            <input type="text" id="fposition" name="maxStudents" th:value="${Assignment.maxStudents}" hidden>
+            <input type="text" id="fage" name="teacher" th:value="${Assignment.teacher}" hidden>
+            <input type="submit" class="btn btn-success" value="Edit">
+          </form>
+        </td>
+        <td sec:authorize="hasRole('ROLE_ADMIN')"><input type="submit" class="btn btn-danger" value="Delete"
+            th:onclick="|makeDELETErequest(${Assignment.id})|"></td>
+
+      </tr>
+    </span>
   </div>
   </div>
   </div>
@@ -219,12 +219,12 @@
 
     });
 
-    $(document).ready(function(){
-    $('*[data-href]').click(function(){
+    $(document).ready(function () {
+      $('*[data-href]').click(function () {
         window.location = $(this).attr('data-href');
         return false;
+      });
     });
-});
 
   </script>
 

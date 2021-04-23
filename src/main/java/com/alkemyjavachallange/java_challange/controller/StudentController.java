@@ -64,22 +64,22 @@ public class StudentController {
         return modelAndView;
     }
 
-    
-    @PostMapping("/user/assignments/{id}") 
-    public ModelAndView addStudentAssignment(@PathVariable int id) { 
-        ModelAndView modelAndView = new ModelAndView("singleAssignment"); 
+    @PostMapping("/user/assignments/{id}")
+    public ModelAndView addStudentAssignment(@PathVariable int id) {
+        ModelAndView modelAndView = new ModelAndView("singleAssignment");
         Assignment assignment = assignmentRepository.findById(id).get();
-        StudentsAssignments studentsAssignments = new StudentsAssignments(assignment.getId(), SecurityContextHolder.getContext().
-        getAuthentication().getName(), assignment.getName(), assignment.getSchedule(), assignment.getTeacher()); 
+        StudentsAssignments studentsAssignments = new StudentsAssignments(assignment.getId(),
+                SecurityContextHolder.getContext().getAuthentication().getName(), assignment.getName(),
+                assignment.getSchedule(), assignment.getTeacher());
         assignment.setMaxStudents(assignment.getMaxStudents() - 1);
         studentsAssignmentsRepository.save(studentsAssignments);
         modelAndView.addObject("assignment", assignment);
         modelAndView.addObject("disabled", true);
         modelAndView.addObject("display", true);
         modelAndView.addObject("assignmentList", assignmentRepository.findAllByOrderByName());
-        modelAndView.addObject("teacherList", teacherRepository.findAllByOrderByName()); 
+        modelAndView.addObject("teacherList", teacherRepository.findAllByOrderByName());
         return modelAndView;
-      }
+    }
 
     @DeleteMapping("/user/studentAssignments/{id}")
     public ModelAndView deleteTeacher(@PathVariable int id) {
@@ -88,7 +88,8 @@ public class StudentController {
         Assignment assignment = assignmentRepository.findById(id).get();
         assignment.setMaxStudents(assignment.getMaxStudents() + 1);
         assignmentRepository.save(assignment);
-        modelAndView.addObject("studentsAssignmentsList",studentsAssignmentsRepository.findAllByOrderByAssignmentName());
+        modelAndView.addObject("studentsAssignmentsList",
+                studentsAssignmentsRepository.findAllByOrderByAssignmentName());
         return modelAndView;
     }
 
