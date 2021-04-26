@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+  integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous" />
+
+<head>
+  <title>ALKEMY UNIVERSITY</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+  <div sec:authorize="hasRole('ROLE_ADMIN')">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" th:href="@{/}">ADMIN</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a th:href="@{admin/assignments}">Materias</a></li>
+          <li><a th:href="@{admin/teachers}">Profesores</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a><span class="glyphicon glyphicon-user"></span>
+              [[${#httpServletRequest.remoteUser}]]</a>
+          </li>
+          <li>
+            <a th:href="@{/logout}"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <a href="/admin/assignments" class="btn btn-default btn-lg btn-block">Gestionar Materias</a>
+      <a href="/admin/teachers" class="btn btn-default btn-lg btn-block">Gestionar Profesores</a>
+    </div>
+  </div>
+  <div sec:authorize="hasRole('ROLE_USER')">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" th:href="@{/}">ESTUDIANTE</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a th:href="@{/user/assignments}">Lista de Materias</a></li>
+          <li><a th:href="@{/user/studentAssignments}">Materias inscriptas</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a><span class="glyphicon glyphicon-user"></span>
+              [[${#httpServletRequest.remoteUser}]]</a>
+          </li>
+          <li>
+            <a th:href="@{/logout}"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <a href="/user/assignments" class="btn btn-default btn-lg btn-block">Listar Materias</a>
+    </div>
+    <div class="container">
+      <a href="/user/studentAssignments" class="btn btn-default btn-lg btn-block">Ver Materias Inscriptas</a>
+    </div>
+  </div>
+
+</body>
+
+</html>

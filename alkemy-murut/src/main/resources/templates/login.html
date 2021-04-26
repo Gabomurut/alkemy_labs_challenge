@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous" />
+<link rel="stylesheet" th:href="@{/css/login.css}" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+
+<head>
+    <title>Alkemy University - Log in</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+
+    
+    <div th:fragment="content">
+        
+        <form class="form" name="f" th:action="@{/login}" method="post">
+            <fieldset id="fondo">
+                <legend>Por favor logueate</legend>
+                <div th:if="${param.error}" class="alert alert-danger">
+                    Datos incorrectos.
+                </div>
+                <div th:if="${param.logout}" class="alert alert-success">
+                    Fuiste deslogueado correctamente.
+                </div>
+                <img th:src="@{/images/alkemylogo.png}" />
+                <input type="number" id="username" name="username" placeholder="" disabled />
+                <input type="number" id="password" name="password" placeholder="" disabled/>
+                <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link" id="student" data-toggle="tab" href="" >ESTUDIANTE</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="admin" data-toggle="tab" href="" >ADMIN</a>
+                    </li>
+                </ul>
+                <button type="submit">Log in</button>
+            </fieldset>
+
+        </form>
+    </div>
+
+    <script>
+
+    $('#student').click(function (e) {
+        e.preventDefault();
+        $("#username").prop('placeholder' , 'DNI');
+        $("#username").prop('type','number');
+        $("#username").prop('value', '')
+        $("#username").prop('disabled', false);
+        $("#password").prop('type','number');
+        $("#password").prop('placeholder','Legajo');
+        $("#password").prop('value', '');
+        $("#password").prop('disabled', false);
+        $("#student").prop('class', "nav-link active");
+        $("#admin").prop('class', "nav-link");
+  
+      });
+
+      $('#admin').click(function (e) {
+        e.preventDefault();
+        $("#username").prop('placeholder' , 'Usuario');
+        $("#username").prop('type' , 'email');
+        $("#username").prop('value', '')
+        $("#username").prop('disabled', false);
+        $("#password").prop('type','password');
+        $("#password").prop('placeholder','Password');
+        $("#password").prop('value', '')
+        $("#password").prop('disabled', false);
+        $("#student").prop('class', "nav-link");
+        $("#admin").prop('class', "nav-link active");
+      });
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>

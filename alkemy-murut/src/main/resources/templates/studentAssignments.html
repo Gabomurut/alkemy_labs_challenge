@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+  integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+
+<head>
+  <title>ALKEMY UNIVERSITY</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+
+
+  <div sec:authorize="hasRole('ROLE_USER')">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" th:href="@{/}">ESTUDIANTE</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a th:href="@{/user/assignments}">Lista de Materias</a></li>
+          <li class="active"><a th:href="@{/user/studentAssignments}">Materias inscriptas</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+          <li><a><span class="glyphicon glyphicon-user"></span> [[${#httpServletRequest.remoteUser}]]</a></li>
+          <li><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <div class="container-fluid">
+    <table class="table table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th>ID</th>
+          <th>MATERIA</th>
+          <th>TURNO</th>
+          <th>PROFESOR</th>
+          <th>ELIMINAR</th>
+        </tr>
+      </thead>
+      <div th:each="Assignment : ${studentsAssignmentsList}">
+        <div th:if="${Assignment.studentDni == #httpServletRequest.remoteUser} ">
+          <tr>
+            <td th:text="${Assignment.id}" </td>
+            <td th:text="${Assignment.assignmentName}" </td>
+            <td th:text="${Assignment.schedule}" </td>
+            <td th:text="${Assignment.teacher}" </td>
+            <td sec:authorize="hasRole('ROLE_USER')"><input type="submit" class="btn btn-danger" value="Borrar"
+                th:onclick="|makeDELETErequest(${Assignment.id})|"></td>
+          </tr>
+        </div>
+      </div>
+    </table>
+  </div>
+
+  <script>
+
+    function makeDELETErequest(id) {
+
+      $.ajax({
+        url: 'https://alkemy-murut.herokuapp.com/user/studentAssignments/' + id,
+        type: 'DELETE',
+        success: function (result) {
+          location.reload(true);
+        }
+      });
+    }
+
+
+
+  </script>
+
+
+</body>
+
+</html>

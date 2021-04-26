@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+  integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+
+<head>
+  <title>ALKEMY UNIVERSITY</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+  <div sec:authorize="hasRole('ROLE_ADMIN')">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" th:href="@{/}">ADMIN</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a th:href="@{/admin/assignments}">Materias</a></li>
+          <li class="active"><a th:href="@{/admin/teachers}">Profesores</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a><span class="glyphicon glyphicon-user"></span> [[${#httpServletRequest.remoteUser}]]</a></li>
+          <li><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+
+      <div class="container-fluid">
+        <h4 id="add2" class="btn btn-default">Agregar Profesor</h4>
+
+        <table id="add" class="table table-hover" style="display: none">
+          <thead class="thead-dark">
+
+            <tr>
+              <form action="/admin/teachers" method="POST">
+
+                <th><label for="fname">Nombre</label></th>
+                <th><label for="flastname">Apellido</label></th>
+                <th><label for="fdni">DNI</label></th>
+                <th><label for="factive">Activo</label></th>
+
+            </tr>
+            <tr>
+              <td><input class="form-control" type="text" id="fname" name="name" required=true></td>
+              <td><input class="form-control" type="text" id="flastname" name="lastName" required=true></td>
+              <td><input class="form-control" type="number" id="fdni" name="dni" required=true></td>
+              <td><input class="form-group-sm" type="checkbox" id="factive" name="active"></td>
+
+            </tr>
+            <tr>
+              <td><input type="submit" value="Agregar Profesor" class="btn btn-primary"></td>
+            </tr>
+            </form>
+
+      </div>
+    </div>
+    <table class="table table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th>ID</th>
+          <th>NOMBRE</th>
+          <th>APELLIDO</th>
+          <th>DNI</th>
+          <th>ACTIVO</th>
+          <th>EDITAR</th>
+          <th>ELIMINAR</th>
+        </tr>
+      </thead>
+
+      <div th:each="Teacher : ${teacherList}">
+
+        <span th:if="${Teacher.id} == ${id}">
+          <tr>
+
+            <td><input type="number" id="fid2" name="id" th:value="${Teacher.id}" readonly></td>
+            <td><input type="text" id="fname2" name="name" th:value="${Teacher.name}"></td>
+            <td><input type="text" id="flastName2" name="lastName" th:value="${Teacher.lastName}"></td>
+            <td><input type="text" id="fdni2" name="dni" th:value="${Teacher.dni}"></td>
+            <td><input type="checkbox" id="factive2" th:checked="${Teacher.active}"></td>
+            <td> <input type="submit" class="btn btn-success" value="Confirm"
+                th:attr="onclick=|makePUTrequest(fid2.value , fname2.value, flastName2.value, fdni2.value , factive2.checked)|">
+            </td>
+            <td><input type="submit" class="btn btn-danger" value="Delete"
+                th:onclick="|makeDELETErequest(${Teacher.id})|"></td>
+
+          </tr>
+
+        </span>
+        <span th:unless="${Teacher.id} == ${id}">
+          <tr>
+            <td th:text="${Teacher.id}" </td>
+            <td th:text="${Teacher.name}" </td>
+            <td th:text="${Teacher.lastName}"></td>
+            <td th:text="${Teacher.dni}"></td>
+            <td><input type="checkbox" th:checked="${Teacher.active}" disabled="disabled" readonly></td>
+            <td>
+              <form action="/admin/editTeachers" method="POST">
+                <input type="number" id="fid" name="id" th:value="${Teacher.id}" hidden>
+                <input type="text" id="fname" name="name" th:value="${Teacher.name}" hidden>
+                <input type="text" id="flastname" name="lastName" th:value="${Teacher.lastName}" hidden>
+                <input type="text" id="fposition" name="dni" th:value="${Teacher.dni}" hidden>
+                <input type="checkbox" id="factive" th:checked="${Teacher.active}" disabled="disabled" readonly hidden>
+                <input type="submit" class="btn btn-success" value="Edit">
+              </form>
+            </td>
+            <td><input type="submit" class="btn btn-danger" value="Delete"
+                th:onclick="|makeDELETErequest(${Teacher.id})|"></td>
+          </tr>
+        </span>
+    </table>
+  </div>
+
+  <script>
+
+    function makePUTrequest(id, name, lastName, dni, active) {
+      console.log(id, name, lastName, dni, active);
+      $.ajax({
+        url: 'https://alkemy-murut.herokuapp.com/admin/teachers/' + id,
+        type: 'PUT',
+        data: {
+          name: name,
+          lastName: lastName,
+          dni: dni,
+          active: active
+
+        },
+
+        success: function (result) {
+          window.location.href = ("/admin/teachers");
+        }
+      });
+    }
+
+    function makeDELETErequest(id) {
+
+      $.ajax({
+        url: 'https://alkemy-murut.herokuapp.com/admin/teachers/' + id,
+        type: 'DELETE',
+        success: function (result) {
+          window.location.href = ("/admin/teachers");
+        }
+      });
+    }
+
+
+    $('#add2').click(function (e) {
+      e.preventDefault();
+      $("#add").delay(100).fadeIn(100)
+      $("#add2").fadeOut((100));
+
+    });
+
+  </script>
+
+</body>
+
+</html>
